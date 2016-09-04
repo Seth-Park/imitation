@@ -41,7 +41,8 @@ def main():
                 print df[-1:]
 
 
-            df['vf_r2'] = np.maximum(0,df['vf_r2'])
+            if 'vf_r2' in df.keys():
+                 df['vf_r2'] = np.maximum(0,df['vf_r2'])
 
             if ax is None:
                 ax = df.plot(subplots=True, title=fname)

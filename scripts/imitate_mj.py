@@ -1,6 +1,7 @@
 import argparse, h5py, json
 import numpy as np
-from environments import rlgymenv
+#from environments import rlgymenv
+from environments import rlbox2denv 
 import policyopt
 from policyopt import imitation, nn, rl, util
 
@@ -8,7 +9,9 @@ from policyopt import imitation, nn, rl, util
 MODES = ('bclone', 'ga')
 OBSNORM_MODES = ('none', 'expertdata', 'online')
 TINY_ARCHITECTURE = '[{"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}]'
-SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+#SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 50}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 25}]'
+#SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 4}, {"type": "nonlin", "func": "tanh"}]'
 
 
 def load_dataset(filename, limit_trajs, data_subsamp_freq):
@@ -105,7 +108,13 @@ def main():
     argstr = json.dumps(vars(args), separators=(',', ':'), indent=2)
     print(argstr)
 
-    mdp = rlgymenv.RLGymMDP(args.env_name)
+    #mdp = rlgymenv.RLGymMDP(args.env_name)
+    # Create rllab environment
+    from rllab.envs.box2d.double_pendulum_env import DoublePendulumEnv
+    from rllab.envs.normalized_env import normalize
+    env = normalize(DoublePendulumEnv())
+    mdp = rlbox2denv.RLBox2DMDP(env)
+    mdp.env_spec.timestep_limit = args.max_traj_len # WARNING: A HUGE NASTY HACK
     util.header('MDP observation space, action space sizes: %d, %d\n' % (mdp.obs_space.dim, mdp.action_space.storage_size))
 
     # Initialize the policy
@@ -151,6 +160,9 @@ def main():
             batch_size=args.bclone_batch_size,
             obsfeat_fn=lambda o:o,
             ex_obs=exobs_Bstacked_Do, ex_a=exa_Bstacked_Da,
+            sim_cfg=policyopt.SimConfig(
+                min_num_trajs=-1, min_total_sa=args.min_total_sa,
+                batch_size=args.sim_batch_size, max_traj_len=max_traj_len),
             eval_sim_cfg=policyopt.SimConfig(
                 min_num_trajs=args.bclone_eval_ntrajs, min_total_sa=-1,
                 batch_size=args.sim_batch_size, max_traj_len=max_traj_len),

@@ -5,8 +5,8 @@ import hashlib
 import json
 import numpy as np
 import os
-import os.path
 import tables, warnings; warnings.filterwarnings('ignore', category=tables.NaturalNameWarning)
+import os.path
 import util
 
 import theano

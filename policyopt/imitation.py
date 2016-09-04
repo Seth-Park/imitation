@@ -7,7 +7,7 @@ from scipy.optimize import fmin_l_bfgs_b
 
 
 class BehavioralCloningOptimizer(object):
-    def __init__(self, mdp, policy, lr, batch_size, obsfeat_fn, ex_obs, ex_a, eval_sim_cfg, eval_freq, train_frac):
+    def __init__(self, mdp, policy, lr, batch_size, obsfeat_fn, ex_obs, ex_a, sim_cfg, eval_sim_cfg, eval_freq, train_frac):
         self.mdp, self.policy, self.lr, self.batch_size, self.obsfeat_fn = mdp, policy, lr, batch_size, obsfeat_fn
 
         # Randomly split data into train/val
@@ -21,6 +21,7 @@ class BehavioralCloningOptimizer(object):
         self.train_ex_obsfeat, self.train_ex_a = self.obsfeat_fn(ex_obs[train_inds]), ex_a[train_inds]
         self.val_ex_obsfeat, self.val_ex_a = self.obsfeat_fn(ex_obs[val_inds]), ex_a[val_inds]
 
+        self.sim_cgf = sim_cfg
         self.eval_sim_cfg = eval_sim_cfg
         self.eval_freq = eval_freq
 
@@ -36,6 +37,13 @@ class BehavioralCloningOptimizer(object):
             # Take step
             loss = self.policy.step_bclone(batch_obsfeat_B_Do, batch_a_B_Da, self.lr)
 
+            # Sample trajectories using current policy
+            with util.Timer() as t_sample:
+                sampbatch = self.mdp.sim_mp(
+                    policy_fn=lambda obsfeat_B_Df: self.policy.sample_actions(obsfeat_B_Df),
+                    obsfeat_fn=self.obsfeat_fn,
+                    cfg=self.sim_cgf)
+
             # Roll out trajectories when it's time to evaluate our policy
             val_loss = val_acc = trueret = avgr = ent = np.nan
             avglen = -1
@@ -48,6 +56,7 @@ class BehavioralCloningOptimizer(object):
                     assert self.val_ex_a.shape[1] == 1
                     # val_acc = (self.policy.sample_actions(self.val_ex_obsfeat)[1].argmax(axis=1) == self.val_ex_a[1]).mean()
                     val_acc = -val_loss # val accuracy doesn't seem too meaningful so just use this
+            trueret = sampbatch.r.padded(fill=0.).sum(axis=1).mean()
 
 
         # Log

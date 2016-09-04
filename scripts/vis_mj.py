@@ -3,7 +3,8 @@ import json
 import h5py
 import numpy as np
 
-from environments import rlgymenv
+#from environments import rlgymenv
+from environments import rlbox2denv
 import gym
 
 import policyopt
@@ -35,7 +36,13 @@ def main():
     # Initialize the MDP
     env_name = train_args['env_name']
     print 'Loading environment', env_name
-    mdp = rlgymenv.RLGymMDP(env_name)
+    #mdp = rlgymenv.RLGymMDP(env_name)
+    # Create rllab environment
+    from rllab.envs.box2d.double_pendulum_env import DoublePendulumEnv
+    from rllab.envs.normalized_env import normalize
+    env = normalize(DoublePendulumEnv())
+    mdp = rlbox2denv.RLBox2DMDP(env)
+    mdp.env_spec.timestep_limit = args.max_traj_len # WARNING: A HUGE NASTY HACK
     util.header('MDP observation space, action space sizes: %d, %d\n' % (mdp.obs_space.dim, mdp.action_space.storage_size))
 
     if args.max_traj_len is None:
