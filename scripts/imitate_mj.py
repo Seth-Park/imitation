@@ -8,7 +8,8 @@ from policyopt import imitation, nn, rl, util
 MODES = ('bclone', 'ga')
 OBSNORM_MODES = ('none', 'expertdata', 'online')
 TINY_ARCHITECTURE = '[{"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}]'
-SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+#SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 64}, {"type": "nonlin", "func": "lrelu"}, {"type": "fc", "n": 64}, {"type": "nonlin", "func": "lrelu"}]'
 
 
 def load_dataset(filename, limit_trajs, data_subsamp_freq):

@@ -1,7 +1,7 @@
 tasks:
   - name: humanoid
     env: Humanoid-v1
-    policy: expert_policies/modern/log_humanoid_1.h5/snapshots/iter0001940
+    policy: expert_policies/modern/Humanoid-v1_2.h5/snapshots/iter0004780
     data_subsamp_freq: 20
     cuts_off_on_success: false
 
@@ -71,7 +71,7 @@ training:
 
 
 options:
-  storagedir: imitation_runs/humanoid
+  storagedir: imitation_runs/modern
   traj_subdir: trajs
   checkpt_subdir: checkpoints
 

@@ -8,7 +8,8 @@ import policyopt
 from policyopt import SimConfig, rl, util, nn
 
 TINY_ARCHITECTURE = '[{"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 64}, {"type": "nonlin", "func": "tanh"}]'
-SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+#SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}, {"type": "fc", "n": 100}, {"type": "nonlin", "func": "tanh"}]'
+SIMPLE_ARCHITECTURE = '[{"type": "fc", "n": 64}, {"type": "nonlin", "func": "lrelu"}, {"type": "fc", "n": 64}, {"type": "nonlin", "func": "lrelu"}]'
 def main():
     np.set_printoptions(suppress=True, precision=5, linewidth=1000)
 

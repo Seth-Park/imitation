@@ -14,15 +14,15 @@ tasks:
     data_subsamp_freq: 5
 
   - name: acrobot
-    env: Acrobot-v0
-    policy: expert_policies/classic/Acrobot-v0.h5/snapshots/iter0000100
+    env: Acrobot-v1
+    policy: expert_policies/classic/Acrobot-v1.h5/snapshots/iter0000100
     cuts_off_on_success: true
     data_subsamp_freq: 5
 
 
 training:
-  full_dataset_num_trajs: 10
-  dataset_num_trajs: [1, 4, 7, 10]
+  full_dataset_num_trajs: 64 
+  dataset_num_trajs: [1, 2, 4, 8, 16, 32, 64]
   deterministic_expert: false
   runs: 7
 

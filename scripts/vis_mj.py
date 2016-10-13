@@ -59,10 +59,10 @@ def main():
     policy.load_h5(policy_file, policy_key)
 
     if args.eval_only:
-        n = 50
+        n = 100
         print 'Evaluating based on {} trajs'.format(n)
 
-        if False:
+        if True:
             eval_trajbatch = mdp.sim_mp(
                 policy_fn=lambda obs_B_Do: policy.sample_actions(obs_B_Do, args.deterministic),
                 obsfeat_fn=lambda obs:obs,

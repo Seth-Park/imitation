@@ -25,6 +25,7 @@ def main():
             df = f['log']
             df.set_index('iter', inplace=True)
             fname2log[fname] = df.loc[:args.range_end, fields]
+    import ipdb; ipdb.set_trace()
 
 
     # Print stuff

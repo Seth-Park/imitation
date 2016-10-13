@@ -209,6 +209,7 @@ def phase0_sampletrajs(spec, specfilename):
         ent = policy._compute_actiondist_entropy(trajbatch.adist.stacked).mean()
         print 'ret: {} +/- {}'.format(returns.mean(), returns.std())
         print 'avgr: {}'.format(avgr)
+        print 'total_sa: {}'.format(lengths.sum())
         print 'len: {} +/- {}'.format(lengths.mean(), lengths.std())
         print 'ent: {}'.format(ent)
 
